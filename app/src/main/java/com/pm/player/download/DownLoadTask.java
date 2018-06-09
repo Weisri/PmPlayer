@@ -90,7 +90,7 @@ public class DownLoadTask {
                 raf = new RandomAccessFile(file,"rwd");
                 raf.seek(start);
                 mFinished+=threadInfo.getFinished();
-                
+
 
 
 
