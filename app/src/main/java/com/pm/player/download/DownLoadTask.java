@@ -1,7 +1,8 @@
 package com.pm.player.download;
 
 import android.content.Context;
-import android.content.pm.FeatureInfo;
+import android.content.Intent;
+import android.util.Log;
 
 import com.pm.player.db.ThreadDao;
 import com.pm.player.db.ThreadDaoImp;
@@ -9,6 +10,7 @@ import com.pm.player.entity.FileInfo;
 import com.pm.player.entity.ThreadInfo;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
@@ -31,7 +33,7 @@ public class DownLoadTask {
     //下载的线程数
     private int mThreadCount=1;
     //是否暂停
-    private boolean isPause = false;
+    public boolean isPause = false;
     private List<DownLoadThread> mThreadList = null;
     public static ExecutorService sExecutorService = Executors.newCachedThreadPool();
 
@@ -63,7 +65,14 @@ public class DownLoadTask {
             }
         }
         mThreadList = new ArrayList<DownLoadThread>();
-
+        for (ThreadInfo threadInfo : list) {
+            DownLoadThread downLoadThread = new DownLoadThread(threadInfo);
+            //使用线程池执行下载任务
+            DownLoadTask.sExecutorService.execute(downLoadThread);
+            mThreadList.add(downLoadThread);
+            //如果数据库不存在下载信息，添加下载信息
+            mDao.insertThread(threadInfo);
+        }
     }
 
     private class DownLoadThread extends Thread{
@@ -90,15 +99,83 @@ public class DownLoadTask {
                 raf = new RandomAccessFile(file,"rwd");
                 raf.seek(start);
                 mFinished+=threadInfo.getFinished();
-
-
-
-
-
+                Intent intent =new Intent();
+                intent.setAction(DownLoadService.ACTION_UPDATE);
+                int code = conn.getResponseCode();
+                if (code ==HttpURLConnection.HTTP_PARTIAL) {
+                    mIput = conn.getInputStream();
+                    byte[] bt = new byte[1024];
+                    int leg =-1;
+                    //UI刷新时间
+                    long time = System.currentTimeMillis();
+                    while ((leg = mIput.read(bt))!=-1) {
+                        raf.write(bt,0,leg);
+                        //累计整个文件完成进度
+                        mFinished+=leg;
+                        //累加每个线程完成的进度
+                        threadInfo.setFinished(threadInfo.getFinished()+leg);
+                        //设置为每500ms更新一次
+                        if (System.currentTimeMillis()-time>1000) {
+                            time = System.currentTimeMillis();
+                            //发送已完成多少
+                            intent.putExtra("finished",mFinished*100/mFileInfo.getLength());
+                            //正在下载文件的id
+                            intent.putExtra("id",mFileInfo.getId());
+                            Log.i("test", "run: "+mFinished*100/mFileInfo.getLength()+"");
+//                            //发送广播给activity
+//                            mContext.sendBroadcast(intent);
+                        }
+                        if (isPause) {
+                            mDao.updateThread(threadInfo.getUrl(),threadInfo.getId(),threadInfo.getFinished());
+                            return;
+                        }
+                    }
+                }
+                //表示线程是否执行完成
+                isFinished = true;
+                //判断所有线程是否执行完成
+                checkAllFinished();
             } catch (Exception e) {
                 e.printStackTrace();
+            }finally {
+                if (conn != null) {
+                    conn.disconnect();
+                }
+                try {
+                    if (mIput!=null){
+                        mIput.close();
+                    }
+                    if (raf != null) {
+                        raf.close();
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             super.run();
         }
+    }
+
+    /**
+     * 判断所有线程是否线程是否执行完成
+     */
+    private synchronized void checkAllFinished() {
+        boolean allFinished = true;
+        for (DownLoadThread thread : mThreadList) {
+            if (!thread.isFinished) {
+                allFinished = false;
+                break;
+            }
+        }
+        if (allFinished==true){
+            //下载完成后 删除数据库信息
+            mDao.deleteThread(mFileInfo.getUrl());
+            //通知ui 哪个线程完成下载
+            Intent intent = new Intent(DownLoadService.ACTION_FINISHED);
+            intent.putExtra("fileInfo",mFileInfo);
+            mContext.sendBroadcast(intent);
+        }
+
     }
 }
