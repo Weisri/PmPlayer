@@ -1,9 +1,10 @@
 package com.pm.player.widget;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
+
+import com.pm.player.entity.VideoInfo;
 
 import java.io.File;
 import java.io.FileFilter;

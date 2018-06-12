@@ -1,4 +1,4 @@
-package com.pm.player.widget;
+package com.pm.player.entity;
 
 import java.io.Serializable;
 
@@ -105,5 +105,20 @@ public class VideoInfo implements Serializable{
 
     public void setDuration(long duration) {
         this.duration = duration;
+    }
+
+    @Override
+    public String toString() {
+        return "VideoInfo{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", path='" + path + '\'' +
+                ", artist='" + artist + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", album='" + album + '\'' +
+                ", mimeType='" + mimeType + '\'' +
+                ", size=" + size +
+                ", duration=" + duration +
+                '}';
     }
 }

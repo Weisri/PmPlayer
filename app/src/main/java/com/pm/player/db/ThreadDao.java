@@ -13,25 +13,25 @@ public interface ThreadDao  {
     /**
      * 添加线程
      */
-    public void insertThread(ThreadInfo threadInfo);
+     void insertThread(ThreadInfo threadInfo);
 
     /**
      * 删除线程
      */
-    public void deleteThread(String url);
+     void deleteThread(String url);
 
     /**
      * 更新线程
      */
-    public void updateThread(String url,int thread_id,int finished);
+     void updateThread(String url,int thread_id,int finished);
 
     /**
      * 查询线程
      */
-    public List<ThreadInfo> queryThread(String url);
+     List<ThreadInfo> queryThread(String url);
 
     /**
      * 是否退出 @return the boolean
      */
-    public boolean isExit(String url,int threadId);
+     boolean isExit(String url,int threadId);
 }

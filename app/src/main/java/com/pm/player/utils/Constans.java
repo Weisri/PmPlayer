@@ -16,5 +16,11 @@ public class Constans {
     //rtsp
     public static String url2="rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov";
 
+    public static String urlone = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+    public static String urltwo = "http://www.imooc.com/download/Activator.exe";
+    public static String urlthree = "http://s1.music.126.net/download/android/CloudMusic_3.4.1.133604_official.apk";
+    public static String urlfour = "http://study.163.com/pub/study-android-official.apk";
+
+
 
 }

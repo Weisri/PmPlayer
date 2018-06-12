@@ -25,13 +25,14 @@ import java.util.concurrent.Executors;
  */
 
 public class DownLoadTask {
+    private static final String TAG = "DownLoad";
     private Context mContext=null;
     private FileInfo mFileInfo=null;
     private ThreadDao mDao=null;
     //下载线程结束位置
     private int mFinished =0;
     //下载的线程数
-    private int mThreadCount=1;
+    private int mThreadCount=3;
     //是否暂停
     public boolean isPause = false;
     private List<DownLoadThread> mThreadList = null;
@@ -121,9 +122,9 @@ public class DownLoadTask {
                             intent.putExtra("finished",mFinished*100/mFileInfo.getLength());
                             //正在下载文件的id
                             intent.putExtra("id",mFileInfo.getId());
-                            Log.i("test", "run: "+mFinished*100/mFileInfo.getLength()+"");
-//                            //发送广播给activity
-//                            mContext.sendBroadcast(intent);
+                            Log.i(TAG, "run:下载中："+mFinished*100/mFileInfo.getLength()+"");
+                            //发送广播给activity
+                            mContext.sendBroadcast(intent);
                         }
                         if (isPause) {
                             mDao.updateThread(threadInfo.getUrl(),threadInfo.getId(),threadInfo.getFinished());

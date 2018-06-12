@@ -1,5 +1,7 @@
 package com.pm.player.widget;
 
+import com.pm.player.entity.VideoInfo;
+
 import java.util.List;
 
 

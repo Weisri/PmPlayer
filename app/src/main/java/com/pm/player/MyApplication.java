@@ -2,6 +2,8 @@ package com.pm.player;
 
 import android.app.Application;
 
+import com.squareup.leakcanary.LeakCanary;
+
 
 /**
  * Created by WeiSir on 2018/6/8.
@@ -9,7 +11,7 @@ import android.app.Application;
 
 public class MyApplication extends Application {
     private   static  MyApplication instaces;
-    private DaoSession daoSession;
+//    private DaoSession daoSession;
 
     public static MyApplication getInstaces(){
         return instaces;
@@ -18,8 +20,17 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        initLeakCanary();
         initGreenDao();
         initFastDownLoad();
+
+    }
+
+    private void initLeakCanary() {
+        if (LeakCanary.isInAnalyzerProcess(getApplicationContext())) {
+            return;
+        }
+        LeakCanary.install(this);
     }
 
     private void initFastDownLoad() {
@@ -41,7 +52,7 @@ public class MyApplication extends Application {
      *
      * @return the dao session
      */
-    public DaoSession getDaoSession() {
-        return daoSession;
-    }
+//    public DaoSession getDaoSession() {
+//        return daoSession;
+//    }
 }

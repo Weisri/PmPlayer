@@ -33,4 +33,7 @@ dependencies {
     compile 'com.tamic.fastdownloader:Android-FastDownloader:1.0.3'
     compile 'org.greenrobot:greendao:3.0.1'
     compile 'org.greenrobot:greendao-generator:3.0.0'
+    //内存泄露检测
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 }
