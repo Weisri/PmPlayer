@@ -1,9 +1,12 @@
 package com.pm.player.widget;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
+import com.pm.player.MainActivity;
 import com.pm.player.entity.VideoInfo;
 
 import java.io.File;
@@ -16,8 +19,13 @@ import java.util.List;
  * 扫描本地视频媒体库
  */
 public class MediaScannerTask extends AsyncTask<Void,Integer,List<VideoInfo>> {
+    private Context mContext;
 
     private List<VideoInfo> videoInfos =new ArrayList<VideoInfo>();
+
+    public MediaScannerTask(Context mContext) {
+        this.mContext = mContext;
+    }
 
     @Override
     protected List<VideoInfo> doInBackground(Void... voids) {
@@ -74,6 +82,13 @@ public class MediaScannerTask extends AsyncTask<Void,Integer,List<VideoInfo>> {
                             videoInfo.setDisplayName(pathname.getName());
                             videoInfo.setPath(pathname.getAbsolutePath());
                             Log.i("打印本地所有视频路径", "name"+videoInfo.getPath());
+                            //发送本地视频路径
+                            Intent intent =new Intent();
+                            ArrayList<String> localPaths = new ArrayList<>();
+                            localPaths.add(videoInfo.getPath());
+                            intent.setAction(MainActivity.ACTION_LOCAL_FILE);
+                            intent.putExtra("videoPaths",localPaths);
+                            mContext.sendBroadcast(intent);
                             list.add(videoInfo);
                             return true;
                         }

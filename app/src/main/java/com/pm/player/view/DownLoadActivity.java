@@ -1,18 +1,13 @@
 package com.pm.player.view;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Message;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pm.player.MainActivity;
 import com.pm.player.R;
 import com.pm.player.adapter.DownLoadListAdapter;
 import com.pm.player.base.BaseActivity;

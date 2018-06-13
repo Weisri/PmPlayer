@@ -1,10 +1,19 @@
 package com.pm.player.utils;
 
+import android.os.Environment;
+
 /**
  * Created by WeiSir on 2018/6/6.
  */
 
 public class Constans {
+    public static int THREAD_COUNT = 3;
+    //文件的保存路径
+    public static final String DownLoadPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/download";
+
+
+
+
     //http协议
     public static String url1="http://ivi.bupt.edu.cn/hls/cctv5phd.m3u8";
     public static String url4 = "http://www.modrails.com/videos/passenger_nginx.mov";
@@ -20,7 +29,6 @@ public class Constans {
     public static String urltwo = "http://www.imooc.com/download/Activator.exe";
     public static String urlthree = "http://s1.music.126.net/download/android/CloudMusic_3.4.1.133604_official.apk";
     public static String urlfour = "http://study.163.com/pub/study-android-official.apk";
-
-
+    public static String urlbili = "https://www.bilibili.com/video/av24625168";
 
 }

@@ -9,11 +9,14 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.pm.player.MainActivity;
 import com.pm.player.entity.FileInfo;
+import com.pm.player.utils.Constans;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.LinkedHashMap;
@@ -31,8 +34,7 @@ public class DownLoadService extends Service {
     public static final String ACTION_STOP = "ACTION_STOP";//暂停
     public static final String ACTION_UPDATE = "ACTION_UPDATE";
     public static final String ACTION_FINISHED = "ACTION_FINISHED";
-    //文件的保存路径
-    public static final String DownLoadPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/download";
+
     public static final int MSG_INIT =0;
 
     private Map<Integer,DownLoadTask> mTasks = new LinkedHashMap<Integer, DownLoadTask>();
@@ -71,7 +73,8 @@ public class DownLoadService extends Service {
     /**
      * 接收initThread线程中的FileInfo信息,然后开始下载
      */
-    public Handler mHandler = new Handler(){
+       Handler mHandler = new Handler(){
+
         @Override
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
@@ -125,7 +128,7 @@ public class DownLoadService extends Service {
                 if (length<=0) {
                     return;
                 }
-                File dir = new File(DownLoadPath);
+                File dir = new File(Constans.DownLoadPath);
                 if (!dir.exists()) {
                     dir.mkdir();
                 }

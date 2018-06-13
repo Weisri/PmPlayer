@@ -13,7 +13,7 @@ import io.vov.vitamio.widget.VideoView;
  * Created by WeiSir on 2018/6/7.
  */
 
-public class PlayerBaseActivity extends BaseActivity {
+public class PlayerBaseActivity extends BaseActivity implements MediaPlayer.OnInfoListener {
     public VideoView mVideoView;
     public MediaController mMediaController;
 
@@ -39,8 +39,12 @@ public class PlayerBaseActivity extends BaseActivity {
         mMediaController=new MediaController(this);
         mMediaController.show(2000);
         mVideoView.setMediaController(mMediaController);
+//        mVideoView.requestFocus();
         //视频质量
         mVideoView.setVideoQuality(MediaPlayer.VIDEOQUALITY_HIGH);
+        //缓冲区
+        mVideoView.setBufferSize(1000*1024);
+        mVideoView.setOnInfoListener(this);
     }
 
     @Override
@@ -49,7 +53,6 @@ public class PlayerBaseActivity extends BaseActivity {
     }
 
     /**
-     * /**
      * 参数layout(缩放参数)参见MediaPlayer的常量：VIDEO_LAYOUT_ORIGIN(原始大小)、VIDEO_LAYOUT_SCALE(画面全屏)、
      * VIDEO_LAYOUT_STRETCH(画面拉伸)、VIDEO_LAYOUT_ZOOM(画面裁剪)、VIDEO_LAYOUT_FIT_PARENT(画面铺满)
      *  参数aspectRation(宽高比)，为0将自动检测
@@ -66,5 +69,10 @@ public class PlayerBaseActivity extends BaseActivity {
     @Override
     protected void handlerMyMessage(Message msg) {
 
+    }
+
+    @Override
+    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+        return false;
     }
 }

@@ -8,6 +8,7 @@ import com.pm.player.db.ThreadDao;
 import com.pm.player.db.ThreadDaoImp;
 import com.pm.player.entity.FileInfo;
 import com.pm.player.entity.ThreadInfo;
+import com.pm.player.utils.Constans;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +32,8 @@ public class DownLoadTask {
     private ThreadDao mDao=null;
     //下载线程结束位置
     private int mFinished =0;
-    //下载的线程数
-    private int mThreadCount=3;
+    //每个文件下载开启的线程数
+    private int mThreadCount= Constans.THREAD_COUNT;
     //是否暂停
     public boolean isPause = false;
     private List<DownLoadThread> mThreadList = null;
@@ -96,7 +97,7 @@ public class DownLoadTask {
                 conn.setRequestMethod("GET");
                 int start = threadInfo.getStart() + threadInfo.getFinished();
                 conn.setRequestProperty("Range","bytes=" + start + "-"+threadInfo.getEnd());
-                File file = new File(DownLoadService.DownLoadPath,mFileInfo.getFileName());
+                File file = new File(Constans.DownLoadPath,mFileInfo.getFileName());
                 raf = new RandomAccessFile(file,"rwd");
                 raf.seek(start);
                 mFinished+=threadInfo.getFinished();

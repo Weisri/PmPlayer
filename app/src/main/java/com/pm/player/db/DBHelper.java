@@ -26,6 +26,8 @@ public class DBHelper extends SQLiteOpenHelper {
             "start integer," +
             "end integer," +
             "finished integer)";
+    private static final String SQL_DROP = "drop table if exists thread_info";
+
 
 
     private DBHelper(Context context)
@@ -65,5 +67,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
+        db.execSQL(SQL_DROP);
+        db.execSQL(SQL_CREATE);
     }
 }
