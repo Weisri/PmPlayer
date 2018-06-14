@@ -1,6 +1,7 @@
 package com.pm.player.base;
 import android.content.res.Configuration;
 import android.os.Message;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import com.pm.player.R;
@@ -13,9 +14,13 @@ import io.vov.vitamio.widget.VideoView;
  * Created by WeiSir on 2018/6/7.
  */
 
-public class PlayerBaseActivity extends BaseActivity implements MediaPlayer.OnInfoListener {
+public class PlayerBaseActivity extends BaseActivity implements MediaPlayer.OnInfoListener,MediaPlayer.OnBufferingUpdateListener {
+
+    private final static String TAG = "PlayerBaseActivity";
     public VideoView mVideoView;
     public MediaController mMediaController;
+    //是否需要自动恢复播放，用于自动暂停，恢复播放
+    private boolean needResume  =true;
 
     @Override
     protected void findViews() {
@@ -39,11 +44,9 @@ public class PlayerBaseActivity extends BaseActivity implements MediaPlayer.OnIn
         mMediaController=new MediaController(this);
         mMediaController.show(2000);
         mVideoView.setMediaController(mMediaController);
-//        mVideoView.requestFocus();
+        mVideoView.requestFocus();
         //视频质量
         mVideoView.setVideoQuality(MediaPlayer.VIDEOQUALITY_HIGH);
-        //缓冲区
-        mVideoView.setBufferSize(1000*1024);
         mVideoView.setOnInfoListener(this);
     }
 
@@ -51,6 +54,42 @@ public class PlayerBaseActivity extends BaseActivity implements MediaPlayer.OnIn
     protected int setLayoutId() {
         return R.layout.activity_main;
     }
+
+    @Override
+    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+        switch (what) {
+            case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                //开始缓冲 暂停播放
+                needResume = true;
+                mp.pause();
+                Log.i(TAG, "onInfo:缓冲..... ：");
+
+                // TODO: 2018/6/14 显示正在缓冲的进度条
+                break;
+            case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                //缓冲结束，继续播放
+                if (needResume) {
+                    mp.start();
+                }
+                break;
+            case MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
+                //显示下载网速
+                Log.i(TAG, "onInfo:当前网速 ："+extra+"kb/s");
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+        // TODO: 2018/6/14 更新缓冲进度条
+    }
+
+    @Override
+    protected void handlerMyMessage(Message msg) {
+
+    }
+
 
     /**
      * 参数layout(缩放参数)参见MediaPlayer的常量：VIDEO_LAYOUT_ORIGIN(原始大小)、VIDEO_LAYOUT_SCALE(画面全屏)、
@@ -67,12 +106,7 @@ public class PlayerBaseActivity extends BaseActivity implements MediaPlayer.OnIn
     }
 
     @Override
-    protected void handlerMyMessage(Message msg) {
-
-    }
-
-    @Override
-    public boolean onInfo(MediaPlayer mp, int what, int extra) {
-        return false;
+    protected void onResume() {
+        super.onResume();
     }
 }

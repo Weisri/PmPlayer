@@ -29,6 +29,5 @@ public class Constans {
     public static String urltwo = "http://www.imooc.com/download/Activator.exe";
     public static String urlthree = "http://s1.music.126.net/download/android/CloudMusic_3.4.1.133604_official.apk";
     public static String urlfour = "http://study.163.com/pub/study-android-official.apk";
-    public static String urlbili = "https://www.bilibili.com/video/av24625168";
 
 }

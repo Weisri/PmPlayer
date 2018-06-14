@@ -1,4 +1,4 @@
-package com.pm.player;
+package com.pm.player.utils;
 
 /**
  * Created by WeiSir on 2018/6/13.
