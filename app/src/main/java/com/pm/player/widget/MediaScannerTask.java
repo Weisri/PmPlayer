@@ -20,8 +20,12 @@ import java.util.List;
  */
 public class MediaScannerTask extends AsyncTask<Void,Integer,List<VideoInfo>> {
     private Context mContext;
-
+    private VideoInfo videoInfo;
     private List<VideoInfo> videoInfos =new ArrayList<VideoInfo>();
+    private ScanerAsynResponse mResponse;
+    public void setOnAsynResponse(ScanerAsynResponse response){
+        this.mResponse = response;
+    }
 
     public MediaScannerTask(Context mContext) {
         this.mContext = mContext;
@@ -41,6 +45,18 @@ public class MediaScannerTask extends AsyncTask<Void,Integer,List<VideoInfo>> {
     @Override
     protected void onPostExecute(List<VideoInfo> videoInfos) {
         super.onPostExecute(videoInfos);
+        if (videoInfos!=null){
+            List<VideoInfo> infoList =videoInfos;
+            mResponse.onDataRecivedSuccess(infoList);
+            //发送本地视频路径
+            Intent intent =new Intent();
+            ArrayList<String> localPaths = new ArrayList<>();
+            localPaths.add(videoInfo.getPath());
+            intent.setAction(MainActivity.ACTION_LOCAL_FILE);
+            intent.putExtra("videoPaths",localPaths);
+            mContext.sendBroadcast(intent);
+            Log.e("aa", "onPostExecute: "+infoList );
+        }
     }
 
     private List<VideoInfo> getVieoFile(final List<VideoInfo> list,  File file) {
@@ -77,18 +93,11 @@ public class MediaScannerTask extends AsyncTask<Void,Integer,List<VideoInfo>> {
                                 || name.equalsIgnoreCase(".ra")
                                 || name.equalsIgnoreCase(".ndivx")
                                 || name.equalsIgnoreCase(".xvid")){
-                            VideoInfo videoInfo =new VideoInfo();
+                             videoInfo =new VideoInfo();
                             pathname.getUsableSpace();
                             videoInfo.setDisplayName(pathname.getName());
                             videoInfo.setPath(pathname.getAbsolutePath());
                             Log.i("打印本地所有视频路径", "name"+videoInfo.getPath());
-                            //发送本地视频路径
-                            Intent intent =new Intent();
-                            ArrayList<String> localPaths = new ArrayList<>();
-                            localPaths.add(videoInfo.getPath());
-                            intent.setAction(MainActivity.ACTION_LOCAL_FILE);
-                            intent.putExtra("videoPaths",localPaths);
-                            mContext.sendBroadcast(intent);
                             list.add(videoInfo);
                             return true;
                         }

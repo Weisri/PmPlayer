@@ -11,7 +11,7 @@ public class VideoInfo implements Serializable{
     private int id;
     /**视频标题**/
     private String title;
-    /**视频标题**/
+    /**视频lujin**/
     private String path;
     private String artist;
     private String displayName;

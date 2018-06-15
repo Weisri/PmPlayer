@@ -14,7 +14,7 @@ import io.vov.vitamio.widget.VideoView;
  * Created by WeiSir on 2018/6/7.
  */
 
-public class PlayerBaseActivity extends BaseActivity implements MediaPlayer.OnInfoListener,MediaPlayer.OnBufferingUpdateListener {
+public class PlayerBaseActivity extends BaseActivity implements MediaPlayer.OnBufferingUpdateListener {
 
     private final static String TAG = "PlayerBaseActivity";
     public VideoView mVideoView;
@@ -47,7 +47,7 @@ public class PlayerBaseActivity extends BaseActivity implements MediaPlayer.OnIn
         mVideoView.requestFocus();
         //视频质量
         mVideoView.setVideoQuality(MediaPlayer.VIDEOQUALITY_HIGH);
-        mVideoView.setOnInfoListener(this);
+//        mVideoView.setOnInfoListener(this);
     }
 
     @Override
@@ -55,30 +55,33 @@ public class PlayerBaseActivity extends BaseActivity implements MediaPlayer.OnIn
         return R.layout.activity_main;
     }
 
-    @Override
-    public boolean onInfo(MediaPlayer mp, int what, int extra) {
-        switch (what) {
-            case MediaPlayer.MEDIA_INFO_BUFFERING_START:
-                //开始缓冲 暂停播放
-                needResume = true;
-                mp.pause();
-                Log.i(TAG, "onInfo:缓冲..... ：");
-
-                // TODO: 2018/6/14 显示正在缓冲的进度条
-                break;
-            case MediaPlayer.MEDIA_INFO_BUFFERING_END:
-                //缓冲结束，继续播放
-                if (needResume) {
-                    mp.start();
-                }
-                break;
-            case MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
-                //显示下载网速
-                Log.i(TAG, "onInfo:当前网速 ："+extra+"kb/s");
-                break;
-        }
-        return true;
-    }
+//    @Override
+//    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+//        switch (what) {
+//            case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+//                //开始缓冲 暂停播放
+//                needResume = true;
+//                mp.pause();
+//                Log.i(TAG, "onInfo:缓冲..... ：");
+//                if (mp.isPlaying()) {
+//
+//                }
+//
+//                // TODO: 2018/6/14 显示正在缓冲的进度条
+//                break;
+//            case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+//                //缓冲结束，继续播放
+//                if (needResume) {
+//                    mp.start();
+//                }
+//                break;
+//            case MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
+//                //显示下载网速
+//                Log.i(TAG, "onInfo:当前网速 ："+extra+"kb/s");
+//                break;
+//        }
+//        return true;
+//    }
 
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
